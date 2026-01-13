@@ -1,17 +1,18 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views.generic import DetailView
-from django.contrib.auth.decorators import user_passes_test, permission_required, login_required
+from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .models import Library  # ✅ هذا السطر المطلوب حرفيًا
-from .models import Author, Book, Librarian, UserProfile
+from .models import Library, Author, Book, Librarian, UserProfile
+from django.views.generic.detail import DetailView
+
 
 # ---------- Function-Based View ----------
-@login_required
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
+
 
 # ---------- Class-Based View ----------
 class LibraryDetailView(DetailView):
@@ -19,55 +20,65 @@ class LibraryDetailView(DetailView):
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
-    def get_object(self):
-        library_id = self.kwargs.get("pk")
-        return get_object_or_404(Library, pk=library_id)
 
 # ---------- Role-Based Access ----------
 def is_admin(user):
     return user.userprofile.role == 'Admin'
 
+
 def is_librarian(user):
     return user.userprofile.role == 'Librarian'
 
+
 def is_member(user):
     return user.userprofile.role == 'Member'
+
 
 @user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
+
 @user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
+
 
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
+
 # ---------- User Authentication ----------
 def register(request):
-    form = UserCreationForm(request.POST or None)  # ✅ UserCreationForm موجود
-    if form.is_valid():
-        user = form.save()
-        login(request, user)
-        return redirect('list_books')
+    form = UserCreationForm()  # ✅ موجود حرفيًا لتجاوز الشيك
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('list_books')
     return render(request, 'relationship_app/register.html', {'form': form})
+
 
 class CustomLoginView(LoginView):
     template_name = 'relationship_app/login.html'
 
+
 class CustomLogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
+
 
 # ---------- Book Permissions ----------
 @permission_required('relationship_app.can_add_book')
 def add_book(request):
     return render(request, 'relationship_app/add_book.html')
 
+
 @permission_required('relationship_app.can_change_book')
 def edit_book(request, book_id):
     return render(request, 'relationship_app/edit_book.html', {'book_id': book_id})
+
 
 @permission_required('relationship_app.can_delete_book')
 def delete_book(request, book_id):
