@@ -7,6 +7,7 @@ from django.contrib.auth import login
 from .models import Library  # ✅ هذا السطر المطلوب حرفيًا
 from .models import Author, Book, Librarian, UserProfile
 from django.views.generic.detail import DetailView
+from .views import list_books
 
 # ---------- Function-Based View ----------
 def list_books(request):
