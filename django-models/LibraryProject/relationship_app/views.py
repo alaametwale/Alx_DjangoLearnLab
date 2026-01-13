@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .models import Library, Author, Book, Librarian, UserProfile
+from django.contrib.auth.decorators import permission_required
 
 # ---------- Function-Based View ----------
 def list_books(request):
