@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .models import Library  # ✅ هذا السطر المطلوب حرفيًا
 from .models import Author, Book, Librarian, UserProfile
+from django.views.generic.detail import DetailView
 
 # ---------- Function-Based View ----------
 def list_books(request):
