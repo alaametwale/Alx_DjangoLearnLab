@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import user_passes_test, permission_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .models import Author, Book, Library, Librarian, UserProfile  # ✅ استيراد كامل للنماذج
+from .models import Library  # ✅ هذا السطر المطلوب حرفيًا
+from .models import Author, Book, Librarian, UserProfile
 
 # ---------- Function-Based View ----------
 def list_books(request):
