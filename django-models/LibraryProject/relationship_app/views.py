@@ -1,4 +1,9 @@
-from django.shortcuts import render
+# Class-based view لعرض تفاصيل مكتبة محددة
+class LibraryDetailView(DetailView):
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'  # ALX يتوقع هذا الاسم بالضبط
+ from django.shortcuts import render
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import user_passes_test, permission_required
 from .models import Book, Library
