@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect
 from django.views.generic import DetailView
-from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .models import Library, Author, Book, Librarian, UserProfile
-from django.views.generic.detail import DetailView
 
 
 # ---------- Function-Based View ----------
@@ -67,19 +66,3 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
-
-
-# ---------- Book Permissions ----------
-@permission_required('relationship_app.can_add_book')
-def add_book(request):
-    return render(request, 'relationship_app/add_book.html')
-
-
-@permission_required('relationship_app.can_change_book')
-def edit_book(request, book_id):
-    return render(request, 'relationship_app/edit_book.html', {'book_id': book_id})
-
-
-@permission_required('relationship_app.can_delete_book')
-def delete_book(request, book_id):
-    return render(request, 'relationship_app/delete_book.html', {'book_id': book_id})
