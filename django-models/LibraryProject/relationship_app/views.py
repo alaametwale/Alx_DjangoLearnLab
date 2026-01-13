@@ -6,18 +6,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .models import Author, Book, Library, Librarian
 
-# ---------- Function-Based View ----------
+# --- Function-Based View ---
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# ---------- Class-Based View ----------
+# --- Class-Based View ---
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
-# ---------- Role-Based Access ----------
+# --- Role-Based Access ---
 def is_admin(user): return user.userprofile.role == 'Admin'
 def is_librarian(user): return user.userprofile.role == 'Librarian'
 def is_member(user): return user.userprofile.role == 'Member'
@@ -34,13 +34,7 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
-# ---------- User Authentication ----------
-class CustomLoginView(LoginView):
-    template_name = 'relationship_app/login.html'
-
-class CustomLogoutView(LogoutView):
-    template_name = 'relationship_app/logout.html'
-
+# --- Authentication ---
 def register(request):
     form = UserCreationForm(request.POST or None)
     if form.is_valid():
@@ -49,7 +43,13 @@ def register(request):
         return redirect('list_books')
     return render(request, 'relationship_app/register.html', {'form': form})
 
-# ---------- Book Permissions ----------
+class CustomLoginView(LoginView):
+    template_name = 'relationship_app/login.html'
+
+class CustomLogoutView(LogoutView):
+    template_name = 'relationship_app/logout.html'
+
+# --- Book Permissions ---
 @permission_required('relationship_app.can_add_book')
 def add_book(request):
     return render(request, 'relationship_app/add_book.html')
