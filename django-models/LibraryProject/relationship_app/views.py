@@ -6,12 +6,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .models import Library, Author, Book, Librarian, UserProfile
 
-
 # ---------- Function-Based View ----------
 def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
-
 
 # ---------- Class-Based View ----------
 class LibraryDetailView(DetailView):
@@ -19,50 +17,39 @@ class LibraryDetailView(DetailView):
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
-
 # ---------- Role-Based Access ----------
 def is_admin(user):
-    return user.userprofile.role == 'Admin'
-
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
 
 def is_librarian(user):
-    return user.userprofile.role == 'Librarian'
-
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
 
 def is_member(user):
-    return user.userprofile.role == 'Member'
-
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
 
 @user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
-
 @user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
-
 
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
-
 # ---------- User Authentication ----------
 def register(request):
-    form = UserCreationForm()  # ✅ موجود حرفيًا لتجاوز الشيك
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('list_books')
+    form = UserCreationForm(request.POST or None)
+    if form.is_valid():
+        user = form.save()
+        login(request, user)
+        return redirect('list_books')
     return render(request, 'relationship_app/register.html', {'form': form})
-
 
 class CustomLoginView(LoginView):
     template_name = 'relationship_app/login.html'
-
 
 class CustomLogoutView(LogoutView):
     template_name = 'relationship_app/logout.html'
