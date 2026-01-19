@@ -1,4 +1,6 @@
 from pathlib import Path
+# Security settings for proxies / HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
