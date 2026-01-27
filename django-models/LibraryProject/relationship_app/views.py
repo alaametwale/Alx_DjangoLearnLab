@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from django.views.generic.detail import DetailView  # تم تعديل السطر ليناسب الاختبارات
+from django.views.generic.detail import DetailView  # استيراد DetailView الصحيح
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .models import Book, Library, UserProfile
+from .models import Book, Library, UserProfile  # استيراد Library صحيح للاختبارات
 
 # ----- Function-Based View -----
 def list_books(request):
