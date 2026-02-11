@@ -1,14 +1,9 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import search_posts
-
-urlpatterns += [
-    path('search/', search_posts, name='post-search'),
-]
 from .views import (
     PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,
     CommentCreateView, CommentUpdateView, CommentDeleteView,
-    profile_view
+    profile_view, search_posts, PostByTagListView
 )
 
 urlpatterns = [
@@ -19,10 +14,16 @@ urlpatterns = [
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
 
-    # Comments CRUD (هنا الصياغة المطلوبة)
+    # Comments CRUD
     path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment-create'),
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
+
+    # Tags
+    path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='posts-by-tag'),
+
+    # Search
+    path('search/', search_posts, name='post-search'),
 
     # Auth
     path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
