@@ -2,19 +2,20 @@ from django import forms
 from .models import Post, Comment
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-
+from taggit.forms import TagWidget  # <-- استدعاء الـ TagWidget
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
-
+        widgets = {
+            'tags': TagWidget(),  # <-- هنا استخدام TagWidget
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['content']
-
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField()
@@ -22,4 +23,3 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
-
