@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Django Blog</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'blog/css/styles.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        {% if user.is_authenticated %}
+            <a href="/posts/new/">New Post</a>
+            <a href="/profile/">Profile</a>
+            <a href="/logout/">Logout</a>
+        {% else %}
+            <a href="/login/">Login</a>
+            <a href="/register/">Register</a>
+        {% endif %}
+        <form action="/search/" method="get">
+            <input type="text" name="q" placeholder="Search...">
+        </form>
+    </nav>
+    <hr>
+
+    {% block content %}{% endblock %}
+</body>
+</html>
