@@ -1,0 +1,7 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<h2>Posts with tag "{{ tag.name }}"</h2>
+{% for post in posts %}
+    <h3><a href="/posts/{{ post.id }}/">{{ post.title }}</a></h3>
+{% endfor %}
+{% endblock %}
