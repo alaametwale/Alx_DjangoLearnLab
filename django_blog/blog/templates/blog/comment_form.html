@@ -1,0 +1,13 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<h2>{% if form.instance.pk %}Edit Comment{% else %}New Comment{% endif %}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+</form>
+
+<a href="{% if form.instance.pk %}{{ form.instance.post.get_absolute_url }}{% else %}{{ request.META.HTTP_REFERER }}{% endif %}">Cancel</a>
+{% endblock %}
