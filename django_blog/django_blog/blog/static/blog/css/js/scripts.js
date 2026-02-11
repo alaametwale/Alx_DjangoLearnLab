@@ -1,0 +1,2 @@
+
+console.log("Blog scripts loaded");
