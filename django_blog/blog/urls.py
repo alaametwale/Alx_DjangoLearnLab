@@ -1,5 +1,10 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from .views import search_posts
+
+urlpatterns += [
+    path('search/', search_posts, name='post-search'),
+]
 from .views import (
     PostListView, PostDetailView, PostCreateView, PostUpdateView, PostDeleteView,
     CommentCreateView, CommentUpdateView, CommentDeleteView,
