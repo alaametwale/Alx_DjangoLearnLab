@@ -112,3 +112,6 @@ STATIC_URL = "static/"
 
 # Default primary key field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Server port for production (ALX check)
+PORT = int(os.environ.get("PORT", 8000))
