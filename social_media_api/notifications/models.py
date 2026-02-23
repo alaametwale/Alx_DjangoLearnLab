@@ -1,33 +1,30 @@
 from django.db import models
 from django.conf import settings
-from posts.models import Post
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+
+User = settings.AUTH_USER_MODEL
 
 
 class Notification(models.Model):
-    NOTIFICATION_TYPES = (
-        ('like', 'Like'),
-        ('follow', 'Follow'),
-    )
-
     recipient = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='notifications'
+        User,
+        related_name='notifications',
+        on_delete=models.CASCADE
     )
-    sender = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='sent_notifications'
+    actor = models.ForeignKey(
+        User,
+        related_name='actor_notifications',
+        on_delete=models.CASCADE
     )
-    post = models.ForeignKey(
-        Post,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )
-    notification_type = models.CharField(max_length=10, choices=NOTIFICATION_TYPES)
+    verb = models.CharField(max_length=255)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    target = GenericForeignKey("content_type", "object_id")
+
     is_read = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.sender} -> {self.recipient} ({self.notification_type})"
+        return f"{self.actor} {self.verb} -> {self.recipient}"
